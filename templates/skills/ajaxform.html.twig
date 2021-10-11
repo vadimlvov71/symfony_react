@@ -1,0 +1,60 @@
+<div>
+    <div class="form center">
+        <div id="responseId" class="center1"> - </div>
+        <form id="contactForm" role="form" >
+            <div>
+                <textarea  rows="6" id="message" name="message">     </textarea>
+            </div>
+            <div>
+                <input type="submit" value="Отправить">
+            </div>
+        </form> 
+    </div>
+</div> 
+
+<script>
+const contactForm = document.getElementById("contactForm");
+const responseId = document.getElementById("responseId");
+contactForm.addEventListener("submit", function(event) {
+    responseId.innerHTML = "";
+    event.preventDefault();
+
+    var request = new XMLHttpRequest();
+    var url = "./ajaxresponse";
+    request.open("POST", url, true);
+    //request.setRequestHeader("Content-Type", "application/json");
+    request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    request.onreadystatechange = function () {
+        if (request.readyState === 4 && request.status === 200) {
+           // console.log(request);
+            var jsonData = JSON.parse(request.response);
+            //console.log(jsonData);
+            Object.keys(jsonData).forEach(key => {
+                let newDiv = document.createElement("div");
+                newDiv.innerHTML = "<span>" + key + "</span> - <span>" + jsonData[key] +"</span>";
+                responseId.appendChild(newDiv);
+            });
+        }else{
+
+        }
+    };
+    var message =  document.getElementById("message").value
+    request.send("message=" + message);
+});  
+</script>
+<style>
+    .center{
+        margin-left:auto;
+        margin-right:auto;
+    }
+    .form{
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding:4px 10px;
+        text-align: left;
+        width: 400px;
+    }
+</style>
+
+
+
